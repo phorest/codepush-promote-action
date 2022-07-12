@@ -14,7 +14,9 @@ async function run() {
 
     // Make network requests
     const iosResult = await promote(iOSAppName, mandatory, rollout, from, to)
+    console.log(`iOS Promote ${iosResult.data}`);
     const androidResult = await promote(androidAppName, mandatory, rollout, from, to)
+    console.log(`Android Promote ${androidResult.data}`);
 
     // Extract info from responses
     const binary = iosResult.data.target_binary_range.replace(/[<>~]+/,'')
@@ -64,12 +66,3 @@ function promote(appName, mandatory, rollout, from, to) {
 run()
 
 
-//   console.log(`Hello ${nameToGreet}!`);
-//   const time = (new Date()).toTimeString();
-//   core.setOutput("time", time);
-//   // Get the JSON webhook payload for the event that triggered the workflow
-//   const payload = JSON.stringify(github.context.payload, undefined, 2)
-//   console.log(`The event payload: ${payload}`);
-// } catch (error) {
-//   core.setFailed(error.message);
-// }

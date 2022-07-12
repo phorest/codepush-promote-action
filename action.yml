@@ -4,11 +4,11 @@ inputs:
   mandatory:
     description: 'This is a mandatory release'
     default: 'false'
-    required: false
+    required: true
   rollout:
     description: 'The rollout percent %'
     default: '100'
-    required: false
+    required: true
   from:
     description: 'From environment i.e. QA'
     default: ''
@@ -24,7 +24,7 @@ inputs:
   androidAppName:
     description: 'The AppCenter CodePush Android app name'
     default: ''
-    required: false
+    required: true
 outputs:
   tag: # id of output
     description: 'The produced tag upon promotion'
