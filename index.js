@@ -46,8 +46,8 @@ async function run() {
       target_commitish: context.sha,
       name: releaseName,
       // body: releaseName,
-      draft: 'false',
-      prerelease: 'false'
+      draft: false,
+      prerelease: false
     });
 
     core.setOutput('releaseName', releaseName);
