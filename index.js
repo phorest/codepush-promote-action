@@ -47,7 +47,7 @@ async function run() {
     core.setOutput('releaseUrl', release.data.html_url);
 
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed("Error message:", error.message);
   }
 }
 
