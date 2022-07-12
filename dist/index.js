@@ -13993,17 +13993,33 @@ async function run() {
 
     // Release and Tag
     const git = github.getOctokit(process.env.GITHUB_TOKEN)
-    const release = await git.rest.repos.createRelease({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      tag_name: tagName,
-      target_commitish: context.sha,
-      name: releaseName,
-      // body: releaseName,
-      draft: false,
-      prerelease: false
-    });
+    const { owner, repo } = context.repo
 
+    const releases = await git.rest.repos.listReleases({ owner, repo })
+    let release
+    if (releases && releases.length > 0) {
+      const release_id = releases[0].id
+      release = await git.rest.repos.updateRelease({
+        release_id,
+        owner,
+        repo,
+        tag_name: tagName,
+        target_commitish: context.sha,
+        name: releaseName,
+        draft: false,
+        prerelease: false
+      });
+    } else {
+      release = await git.rest.repos.createRelease({
+        owner,
+        repo,
+        tag_name: tagName,
+        target_commitish: context.sha,
+        name: releaseName,
+        draft: false,
+        prerelease: false
+      });
+    }
     core.setOutput('releaseName', releaseName);
     core.setOutput('releaseTag', tagName);
     core.setOutput('releaseUrl', release.data.html_url);
