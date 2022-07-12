@@ -13953,8 +13953,10 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(8087);
-const { github, context } = __nccwpck_require__(9277);
+const github = __nccwpck_require__(9277);
 const axios = __nccwpck_require__(8897);
+
+const context = github.context;
 
 async function run() {
   try {
