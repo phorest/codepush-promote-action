@@ -5,6 +5,7 @@ const axios = require("axios");
 async function run() {
   try {
     // Get inputs
+    console.log('getting inputs')
     const mandatory = core.getInput('mandatory');
     const rollout = core.getInput('rollout');
     const from = core.getInput('from');
@@ -13,6 +14,7 @@ async function run() {
     const androidAppName = core.getInput('androidAppName');
 
     // Make network requests
+    console.log('network attempts')
     const iosResult = await promote(iOSAppName, mandatory, rollout, from, to)
     console.log(`iOS Promote ${iosResult.data}`);
     const androidResult = await promote(androidAppName, mandatory, rollout, from, to)
