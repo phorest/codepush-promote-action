@@ -42,9 +42,11 @@ async function run() {
     const { owner, repo } = context.repo
 
     const releases = await git.rest.repos.listReleases({ owner, repo })
+    console.log("Releases found", releases)
 
     let release_id
     if (releases && releases.length > 0) {
+
       release_id = releases.find(r => r.draft === true).id
     }
 
