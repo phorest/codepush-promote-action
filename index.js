@@ -5,16 +5,22 @@ const axios = require("axios");
 async function run() {
   try {
     // Get inputs
-    console.log('getting inputs')
+    console.log('Getting inputs')
     const mandatory = core.getInput('mandatory');
+    console.log('mandatory:', mandatory);
     const rollout = core.getInput('rollout');
+    console.log('rollout:', rollout);
     const from = core.getInput('from');
+    console.log('from:', from);
     const to = core.getInput('to');
+    console.log('to:', to);
     const iOSAppName = core.getInput('iOSAppName');
+    console.log('iOSAppName:', iOSAppName);
     const androidAppName = core.getInput('androidAppName');
+    console.log('androidAppName:', androidAppName);
 
     // Make network requests
-    console.log('network attempts')
+    console.log('Network attempts')
     const iosResult = await promote(iOSAppName, mandatory, rollout, from, to)
     console.log(`iOS Promote ${iosResult.data}`);
     const androidResult = await promote(androidAppName, mandatory, rollout, from, to)
@@ -47,7 +53,7 @@ async function run() {
     core.setOutput('releaseUrl', release.data.html_url);
 
   } catch (error) {
-    core.setFailed("Error message:", error.message);
+    core.setFailed(error.message);
   }
 }
 
