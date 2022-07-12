@@ -13992,14 +13992,14 @@ async function run() {
     const releaseName = `${binary}${label}`
 
     // Release and Tag
-    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-    const release = await octokit.repos.createRelease({
+    const git = github.getOctokit(process.env.GITHUB_TOKEN)
+    const release = await git.rest.repos.createRelease({
       owner: context.repo.owner,
       repo: context.repo.repo,
       tag_name: tagName,
       target_commitish: context.sha,
       name: releaseName,
-      body: releaseName,
+      // body: releaseName,
       draft: 'false',
       prerelease: 'false'
     });
