@@ -1,0 +1,33 @@
+name: 'CodePush Promote Action'
+description: 'Automates the promotion on MS CodePush, including repo tagging and release'
+inputs:
+  mandatory:
+    description: 'This is a mandatory release'
+    default: 'false'
+    required: false
+  rollout:
+    description: 'The rollout percent %'
+    default: '100'
+    required: false
+  from:
+    description: 'From environment i.e. QA'
+    default: ''
+    required: true
+  to:
+    description: 'To environment i.e. PROD'
+    default: ''
+    required: true
+  iOSAppName:
+    description: 'The AppCenter CodePush iOS app name'
+    default: ''
+    required: true
+  androidAppName:
+    description: 'The AppCenter CodePush Android app name'
+    default: ''
+    required: false
+outputs:
+  tag: # id of output
+    description: 'The produced tag upon promotion'
+runs:
+  using: 'node16'
+  main: 'index.js'
