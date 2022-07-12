@@ -42,12 +42,11 @@ async function run() {
     const { owner, repo } = context.repo
 
     const releases = await git.rest.repos.listReleases({ owner, repo })
-    console.log("Releases found", releases)
+    console.log("Releases found", releases.data)
 
     let release_id
-    if (releases && releases.length > 0) {
-
-      release_id = releases.find(r => r.draft === true).id
+    if (releases && releases.data.length > 0) {
+      release_id = releases.data.find(r => r.draft === true).id
     }
 
     let release
