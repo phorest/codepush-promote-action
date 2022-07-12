@@ -63,7 +63,7 @@ function promote(appName, mandatory, rollout, from, to) {
   const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`
   const data = {
     is_mandatory: mandatory === 'true',
-    rollout: rollout
+    rollout: parseInt(rollout)
   }
   const headers = {
     "X-API-Token": process.env.APPCENTER_TOKEN,
