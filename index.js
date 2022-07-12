@@ -78,7 +78,7 @@ function promote(appName, mandatory, rollout, from, to) {
   return {
     data: {
       target_binary_range: '~1.1',
-      label:'v13',
+      label:'v14',
       original_label: 'v100'
     }
   }
