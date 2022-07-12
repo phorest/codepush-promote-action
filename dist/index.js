@@ -13996,9 +13996,14 @@ async function run() {
     const { owner, repo } = context.repo
 
     const releases = await git.rest.repos.listReleases({ owner, repo })
-    let release
+
+    let release_id
     if (releases && releases.length > 0) {
-      const release_id = releases[0].id
+      release_id = releases.find(r => r.draft === true).id
+    }
+
+    let release
+    if (release_id) {
       release = await git.rest.repos.updateRelease({
         release_id,
         owner,
