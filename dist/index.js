@@ -14014,19 +14014,27 @@ async function run() {
 }
 
 function promote(appName, mandatory, rollout, from, to) {
-  const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`
-  const data = {
-    is_mandatory: mandatory === 'true',
-    rollout: parseInt(rollout)
-  }
-  const headers = {
-    "X-API-Token": process.env.APPCENTER_TOKEN,
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-  }
-  console.log(`POST ${url} ${JSON.stringify(data)}`)
+  // const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`
+  // const data = {
+  //   is_mandatory: mandatory === 'true',
+  //   rollout: parseInt(rollout)
+  // }
+  // const headers = {
+  //   "X-API-Token": process.env.APPCENTER_TOKEN,
+  //   "Accept": "application/json",
+  //   "Content-Type": "application/json",
+  // }
+  // console.log(`POST ${url} ${JSON.stringify(data)}`)
+  //
+  // return axios.post(url, data,{ headers })
 
-  return axios.post(url, data,{ headers })
+  return {
+    data: {
+      target_binary_range: '~1.0',
+      label:'v11',
+      original_label: 'v100'
+    }
+  }
 }
 
 run()
