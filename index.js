@@ -55,7 +55,6 @@ async function run() {
     core.setOutput('releaseUrl', release.data.html_url);
 
   } catch (error) {
-    console.log(JSON.stringify(error))
     console.log(error)
     core.setFailed(error.message);
   }
