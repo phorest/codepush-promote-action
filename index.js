@@ -68,9 +68,9 @@ function promote(appName, mandatory, rollout, from, to) {
     "Accept": "application/json",
     "Content-Type": "application/json",
   }
-  console.log(`POST ${url} ${data}`)
+  console.log(`POST ${url} ${JSON.stringify(data)}`)
 
-  return axios.post(url, data,{headers})
+  return axios.post(url, data,{ headers })
 }
 
 run()
