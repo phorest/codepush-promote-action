@@ -13953,7 +13953,7 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(8087);
-const { GitHub, context } = __nccwpck_require__(9277);
+const { github, context } = __nccwpck_require__(9277);
 const axios = __nccwpck_require__(8897);
 
 async function run() {
@@ -13990,8 +13990,8 @@ async function run() {
     const releaseName = `${binary}${label}`
 
     // Release and Tag
-    const github = new GitHub(process.env.GITHUB_TOKEN);
-    const release = await github.repos.createRelease({
+    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+    const release = await octokit.repos.createRelease({
       owner: context.repo.owner,
       repo: context.repo.repo,
       tag_name: tagName,

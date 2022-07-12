@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const { GitHub, context } = require('@actions/github');
+const { github, context } = require('@actions/github');
 const axios = require("axios");
 
 async function run() {
@@ -36,8 +36,8 @@ async function run() {
     const releaseName = `${binary}${label}`
 
     // Release and Tag
-    const github = new GitHub(process.env.GITHUB_TOKEN);
-    const release = await github.repos.createRelease({
+    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+    const release = await octokit.repos.createRelease({
       owner: context.repo.owner,
       repo: context.repo.repo,
       tag_name: tagName,
