@@ -16,9 +16,13 @@ async function run() {
     console.log('from:', from);
     const to = core.getInput('to');
     console.log('to:', to);
-    const iOSAppName = core.getInput('iOSAppName');
+    const create_release = core.getInput('create_release');
+    console.log('create_release:', create_release);
+
+    // Envs
+    const iOSAppName = process.env.IOS_APP_NAME;
     console.log('iOSAppName:', iOSAppName);
-    const androidAppName = core.getInput('androidAppName');
+    const androidAppName = process.env.ANDROID_APP_NAME;
     console.log('androidAppName:', androidAppName);
 
     // Make network requests
@@ -27,6 +31,10 @@ async function run() {
     console.log(`iOS Promote ${iosResult.data}`);
     const androidResult = await promote(androidAppName, mandatory, rollout, from, to)
     console.log(`Android Promote ${androidResult.data}`);
+
+    if (create_release === 'false') {
+      return
+    }
 
     // Extract info from responses
     const binary = iosResult.data.target_binary_range.replace(/[<>~]+/,'')

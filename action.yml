@@ -17,13 +17,9 @@ inputs:
     description: 'To environment i.e. PROD'
     default: ''
     required: true
-  iOSAppName:
-    description: 'The AppCenter CodePush iOS app name'
-    default: ''
-    required: true
-  androidAppName:
-    description: 'The AppCenter CodePush Android app name'
-    default: ''
+  create_release:
+    description: 'Should create a new release (use draft if available)'
+    default: 'true'
     required: true
 outputs:
   tag: # id of output

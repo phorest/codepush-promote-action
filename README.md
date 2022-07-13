@@ -20,13 +20,10 @@ A string indicating the `"from"` CodePush env, i.e. `"DEV"`
 
 A string indicating the `"to"` CodePush env, i.e. `"PROD"`
 
-## `iOSAppName`
+## `create_release`
 
-A string indicating the CodePush iOS app name
+A boolean indicating if a release should be created, first draft will be used if available 
 
-## `androidAppName`
-
-A string indicating the CodePush Android app name
 
 ## Outputs
 
@@ -57,3 +54,5 @@ The url of the release
     env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+        IOS_APP_NAME: 'ios_codepush_app_name'
+        ANDROID_APP_NAME: 'android_codepush_app_name'
