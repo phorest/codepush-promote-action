@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
+const core = require("@actions/core");
+const github = require("@actions/github");
 const axios = require("axios");
 
 const context = github.context;
@@ -7,57 +7,63 @@ const context = github.context;
 async function run() {
   try {
     // Get inputs
-    console.log('Getting inputs')
-    const mandatory = core.getInput('mandatory');
-    console.log('mandatory:', mandatory);
-    const rollout = core.getInput('rollout');
-    console.log('rollout:', rollout);
-    const from = core.getInput('from');
-    console.log('from:', from);
-    const to = core.getInput('to');
-    console.log('to:', to);
-    const create_release = core.getInput('create_release');
-    console.log('create_release:', create_release);
+    console.log("Getting inputs");
+    const mandatory = core.getInput("mandatory");
+    console.log("mandatory:", mandatory);
+    const rollout = core.getInput("rollout");
+    console.log("rollout:", rollout);
+    const from = core.getInput("from");
+    console.log("from:", from);
+    const to = core.getInput("to");
+    console.log("to:", to);
+    const create_release = core.getInput("create_release");
+    console.log("create_release:", create_release);
 
     // Envs
     const iOSAppName = process.env.IOS_APP_NAME;
-    console.log('iOSAppName:', iOSAppName);
+    console.log("iOSAppName:", iOSAppName);
     const androidAppName = process.env.ANDROID_APP_NAME;
-    console.log('androidAppName:', androidAppName);
+    console.log("androidAppName:", androidAppName);
 
     // Make network requests
-    console.log('Network attempts')
-    const iosResult = await promote(iOSAppName, mandatory, rollout, from, to)
+    console.log("Network attempts");
+    const iosResult = await promote(iOSAppName, mandatory, rollout, from, to);
     console.log(`iOS Promote ${iosResult.data}`);
-    const androidResult = await promote(androidAppName, mandatory, rollout, from, to)
+    const androidResult = await promote(
+      androidAppName,
+      mandatory,
+      rollout,
+      from,
+      to
+    );
     console.log(`Android Promote ${androidResult.data}`);
 
-    if (create_release === 'false') {
-      return
+    if (create_release === "false") {
+      return;
     }
 
     // Extract info from responses
-    const binary = iosResult.data.target_binary_range.replace(/[<>~]+/,'')
-    const label = iosResult.data.label
-    const originalLabel = iosResult.data.original_label
+    const binary = iosResult.data.target_binary_range.replace(/[<>~]+/, "");
+    const label = iosResult.data.label;
+    const originalLabel = iosResult.data.original_label;
 
     // New Variables
-    const tagName = `PRODUCTION-${binary}-${label}(${originalLabel})`
-    const releaseName = `${binary}${label}`
+    const tagName = `PRODUCTION-${binary}-${label}(${originalLabel})`;
+    const releaseName = `${binary}${label}`;
 
     // Release and Tag
-    const git = github.getOctokit(process.env.GITHUB_TOKEN)
-    const { owner, repo } = context.repo
+    const git = github.getOctokit(process.env.GITHUB_TOKEN);
+    const { owner, repo } = context.repo;
 
-    const releases = await git.rest.repos.listReleases({ owner, repo })
-    console.log("Releases found", releases.data)
+    const releases = await git.rest.repos.listReleases({ owner, repo });
+    console.log("Releases found", releases.data);
 
-    let release_id
+    let release_id;
     if (releases && releases.data.length > 0) {
-      release_id = releases.data.find(r => r.draft === true).id
+      release_id = releases.data.find((r) => r.draft === true).id;
     }
 
-    let release
+    let release;
     if (release_id) {
       release = await git.rest.repos.updateRelease({
         release_id,
@@ -67,7 +73,7 @@ async function run() {
         target_commitish: context.sha,
         name: releaseName,
         draft: false,
-        prerelease: false
+        prerelease: false,
       });
     } else {
       release = await git.rest.repos.createRelease({
@@ -77,44 +83,32 @@ async function run() {
         target_commitish: context.sha,
         name: releaseName,
         draft: false,
-        prerelease: false
+        prerelease: false,
       });
     }
-    core.setOutput('releaseName', releaseName);
-    core.setOutput('releaseTag', tagName);
-    core.setOutput('releaseUrl', release.data.html_url);
-
+    core.setOutput("releaseName", releaseName);
+    core.setOutput("releaseTag", tagName);
+    core.setOutput("releaseUrl", release.data.html_url);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     core.setFailed(error.message);
   }
 }
 
 function promote(appName, mandatory, rollout, from, to) {
-
-  return {
-    data: {
-      target_binary_range: '~1.1',
-      label: 'v14',
-      original_label: 'v100'
-    }
-  }
-
-  const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`
+  const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`;
   const data = {
-    is_mandatory: mandatory === 'true',
-    rollout: parseInt(rollout)
-  }
+    is_mandatory: mandatory === "true",
+    rollout: parseInt(rollout),
+  };
   const headers = {
     "X-API-Token": process.env.APPCENTER_TOKEN,
-    "Accept": "application/json",
+    Accept: "application/json",
     "Content-Type": "application/json",
-  }
-  console.log(`POST ${url} ${JSON.stringify(data)}`)
+  };
+  console.log(`POST ${url} ${JSON.stringify(data)}`);
 
-  return axios.post(url, data,{ headers })
+  return axios.post(url, data, { headers });
 }
 
-run()
-
-
+run();

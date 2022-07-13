@@ -1,0 +1,12 @@
+# don't ever lint node_modules
+node_modules
+# don't lint native
+ios
+android
+# don't lint coverage output
+coverage
+
+babel.config.js
+index.js
+jest
+rn-cli.config.js
