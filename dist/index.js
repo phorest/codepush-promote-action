@@ -14045,6 +14045,15 @@ async function run() {
 }
 
 function promote(appName, mandatory, rollout, from, to) {
+
+  return {
+    data: {
+      target_binary_range: '~1.1',
+      label: 'v14',
+      original_label: 'v100'
+    }
+  }
+
   const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`
   const data = {
     is_mandatory: mandatory === 'true',
