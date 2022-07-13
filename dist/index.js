@@ -15152,9 +15152,9 @@ async function run() {
     console.log("androidAppName:", androidAppName);
 
     // Make network requests
-    console.log("Network attempts");
+    console.log("Network requests to MS AppCenter CodePush");
     const iosResult = await promote(iOSAppName, mandatory, rollout, from, to);
-    console.log(`iOS Promote ${iosResult.data}`);
+    console.log("iOS Promote result:", iosResult.data);
     const androidResult = await promote(
       androidAppName,
       mandatory,
@@ -15162,7 +15162,7 @@ async function run() {
       from,
       to
     );
-    console.log(`Android Promote ${androidResult.data}`);
+    console.log("Android Promote result:", androidResult.data);
 
     if (create_release === "false") {
       return;
@@ -15182,7 +15182,6 @@ async function run() {
     const { owner, repo } = context.repo;
 
     const releases = await git.rest.repos.listReleases({ owner, repo });
-    console.log("Releases found", releases.data);
 
     let release_id;
     if (releases && releases.data.length > 0) {
@@ -15215,8 +15214,11 @@ async function run() {
     core.setOutput("releaseName", releaseName);
     core.setOutput("releaseTag", tagName);
     core.setOutput("releaseUrl", release.data.html_url);
+
+    console.log("Created release:", releaseName);
+    console.log("Created tag:", tagName);
   } catch (error) {
-    console.log(error);
+    console.log("Full error", error);
     core.setFailed(error.message);
   }
 }

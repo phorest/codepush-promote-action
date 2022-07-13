@@ -4,6 +4,8 @@ This action promotes latest CodePush label from an ENV to another.
 
 Please note you need to `ncc build index.js` in order to compile your changes.
 
+Check example below for expected `env` variables.
+
 ## Inputs
 
 ## `mandatory`
