@@ -38,7 +38,7 @@ async function run() {
       from,
       to
     );
-    console.log("Android Promote result:", androidResult.data);
+    console.log("Android Promote result:", androidResult);
 
     // if (create_release === "false") {
     //   return;
@@ -107,7 +107,7 @@ function promote(appName, mandatory, rollout, from, to) {
       await exec(`yarn code-push promote ${appName} ${from} ${to}`);
       const { stdout } = await exec(`yarn code-push deployment history ${appName} ${to} --format json`);
       console.log(stdout);
-      return stdout;
+      return JSON.parse(`[${stdout.split('[')[1].split(']')[0]}]`);
     }
     return cliPromotion();
   }
