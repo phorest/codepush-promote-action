@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "eslint": "^8.19.0",
-    "prettier": "^2.7.1",
-    "code-push": "git+ssh://git@github.com:phorest/code-push.git#main"
+    "prettier": "^2.7.1"
   }
 }
