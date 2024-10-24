@@ -102,7 +102,7 @@ async function run() {
 function promote(appName, mandatory, rollout, from, to) {
   console.log(process.env.APPCENTER_TOKEN, process.env.CI_TOKEN)
   // If no appcenter token is provided and there is a ci token, then we know to use the phorest codepush cli
-  if (!process.env.APPCENTER_TOKEN && process.env.CI_TOKEN) {
+  // if (!process.env.APPCENTER_TOKEN && process.env.CI_TOKEN) {
     async function cliPromotion() {
       await exec('yarn code-push register-ci');
       await exec(`yarn code-push promote ${appName} ${from} ${to}`);
@@ -111,21 +111,21 @@ function promote(appName, mandatory, rollout, from, to) {
       return JSON.parse(`[${stdout.split('[')[1].split(']')[0]}]`);
     }
     return cliPromotion();
-  }
+  // }
 
-  const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`;
-  const data = {
-    is_mandatory: mandatory === "true",
-    rollout: parseInt(rollout),
-  };
-  const headers = {
-    "X-API-Token": process.env.APPCENTER_TOKEN,
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-  console.log(`POST ${url} ${JSON.stringify(data)}`);
-
-  return axios.post(url, data, { headers });
+  // const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`;
+  // const data = {
+  //   is_mandatory: mandatory === "true",
+  //   rollout: parseInt(rollout),
+  // };
+  // const headers = {
+  //   "X-API-Token": process.env.APPCENTER_TOKEN,
+  //   Accept: "application/json",
+  //   "Content-Type": "application/json",
+  // };
+  // console.log(`POST ${url} ${JSON.stringify(data)}`);
+  //
+  // return axios.post(url, data, { headers });
 }
 
 run();
