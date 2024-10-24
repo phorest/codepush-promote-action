@@ -1,8 +1,6 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const axios = require("axios");
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 
 const context = github.context;
 
@@ -28,9 +26,9 @@ async function run() {
     console.log("androidAppName:", androidAppName);
 
     // Make network requests
-    // console.log("Network requests to MS AppCenter CodePush");
-    // const iosResult = await promote(iOSAppName, mandatory, rollout, from, to);
-    // console.log("iOS Promote result:", iosResult.data);
+    console.log("Network requests to MS AppCenter CodePush");
+    const iosResult = await promote(iOSAppName, mandatory, rollout, from, to);
+    console.log("iOS Promote result:", iosResult.data);
     const androidResult = await promote(
       androidAppName,
       mandatory,
@@ -40,59 +38,59 @@ async function run() {
     );
     console.log("Android Promote result:", androidResult);
 
-    // if (create_release === "false") {
-    //   return;
-    // }
-    //
-    // // Extract info from responses
-    // const binary = iosResult.data.target_binary_range.replace(/[<>~]+/, "");
-    // const label = iosResult.data.label;
-    // const originalLabel = iosResult.data.original_label;
-    //
-    // // New Variables
-    // const tagName = `PRODUCTION-${binary}-${label}(${originalLabel})`;
-    // const releaseName = `${binary}${label}`;
-    //
-    // // Release and Tag
-    // const git = github.getOctokit(process.env.GITHUB_TOKEN);
-    // const { owner, repo } = context.repo;
-    //
-    // const releases = await git.rest.repos.listReleases({ owner, repo });
-    //
-    // let release_id;
-    // if (releases && releases.data.length > 0) {
-    //   release_id = releases.data.find((r) => r.draft === true).id;
-    // }
-    //
-    // let release;
-    // if (release_id) {
-    //   release = await git.rest.repos.updateRelease({
-    //     release_id,
-    //     owner,
-    //     repo,
-    //     tag_name: tagName,
-    //     target_commitish: context.sha,
-    //     name: releaseName,
-    //     draft: false,
-    //     prerelease: false,
-    //   });
-    // } else {
-    //   release = await git.rest.repos.createRelease({
-    //     owner,
-    //     repo,
-    //     tag_name: tagName,
-    //     target_commitish: context.sha,
-    //     name: releaseName,
-    //     draft: false,
-    //     prerelease: false,
-    //   });
-    // }
-    // core.setOutput("releaseName", releaseName);
-    // core.setOutput("releaseTag", tagName);
-    // core.setOutput("releaseUrl", release.data.html_url);
-    //
-    // console.log("Created release:", releaseName);
-    // console.log("Created tag:", tagName);
+    if (create_release === "false") {
+      return;
+    }
+
+    // Extract info from responses
+    const binary = iosResult.data.target_binary_range.replace(/[<>~]+/, "");
+    const label = iosResult.data.label;
+    const originalLabel = iosResult.data.original_label;
+
+    // New Variables
+    const tagName = `PRODUCTION-${binary}-${label}(${originalLabel})`;
+    const releaseName = `${binary}${label}`;
+
+    // Release and Tag
+    const git = github.getOctokit(process.env.GITHUB_TOKEN);
+    const { owner, repo } = context.repo;
+
+    const releases = await git.rest.repos.listReleases({ owner, repo });
+
+    let release_id;
+    if (releases && releases.data.length > 0) {
+      release_id = releases.data.find((r) => r.draft === true).id;
+    }
+
+    let release;
+    if (release_id) {
+      release = await git.rest.repos.updateRelease({
+        release_id,
+        owner,
+        repo,
+        tag_name: tagName,
+        target_commitish: context.sha,
+        name: releaseName,
+        draft: false,
+        prerelease: false,
+      });
+    } else {
+      release = await git.rest.repos.createRelease({
+        owner,
+        repo,
+        tag_name: tagName,
+        target_commitish: context.sha,
+        name: releaseName,
+        draft: false,
+        prerelease: false,
+      });
+    }
+    core.setOutput("releaseName", releaseName);
+    core.setOutput("releaseTag", tagName);
+    core.setOutput("releaseUrl", release.data.html_url);
+
+    console.log("Created release:", releaseName);
+    console.log("Created tag:", tagName);
   } catch (error) {
     console.log("Full error", error);
     core.setFailed(error.message);
@@ -100,18 +98,6 @@ async function run() {
 }
 
 function promote(appName, mandatory, rollout, from, to) {
-  // If no appcenter token is provided and there is a ci token, then we know to use the phorest codepush cli
-  if (!process.env.APPCENTER_TOKEN && process.env.CI_TOKEN) {
-    async function cliPromotion() {
-      await exec('yarn code-push register-ci');
-      await exec(`yarn code-push promote ${appName} ${from} ${to}`);
-      const { stdout } = await exec(`yarn code-push deployment history ${appName} ${to} --format json`);
-      console.log(stdout);
-      return JSON.parse(`[${stdout.split('[')[1].split(']')[0]}]`);
-    }
-    return cliPromotion();
-  }
-
   const url = `https://api.appcenter.ms/v0.1/apps/Phorest/${appName}/deployments/${from}/promote_release/${to}`;
   const data = {
     is_mandatory: mandatory === "true",
