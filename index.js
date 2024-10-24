@@ -100,6 +100,7 @@ async function run() {
 }
 
 function promote(appName, mandatory, rollout, from, to) {
+  console.log(process.env.APPCENTER_TOKEN, process.env.CI_TOKEN)
   // If no appcenter token is provided and there is a ci token, then we know to use the phorest codepush cli
   if (!process.env.APPCENTER_TOKEN && process.env.CI_TOKEN) {
     async function cliPromotion() {
